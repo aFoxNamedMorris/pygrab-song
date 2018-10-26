@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from subprocess import Popen, PIPE
+from subprocess import Popen
 import os
 import dbus
 bus = dbus.SessionBus()
@@ -13,7 +13,7 @@ class GrabSong(object):
         self.metadata = self.get_metadata()
         self.curdir = os.path.dirname(os.path.realpath(__file__))
         self.outdir = "%s/Output" % self.curdir
-        self.outfiles = ["artist", "album", "title"]
+        self.outfiles = ["Artist", "Album", "Title"]
         self.song_art = None
 
     def get_metadata(self):
@@ -27,13 +27,13 @@ class GrabSong(object):
         self.player_proper_name = interface.Get("org.mpris.MediaPlayer2", "Identity")
 
         returned_value = {
-            "artist": metadata["xesam:artist"][0],
-            "album": metadata["xesam:album"],
-            "title": metadata["xesam:title"]
+            "Artist": metadata["xesam:artist"][0],
+            "Album": metadata["xesam:album"],
+            "Title": metadata["xesam:title"]
         }
 
         if self.song_changed == False:
-            self.song_changed = self.metadata["artist"] != returned_value["artist"] and self.metadata["album"] != returned_value["album"] and self.metadata["title"] != returned_value["title"]
+            self.song_changed = self.metadata["Artist"] != returned_value["Artist"] and self.metadata["Album"] != returned_value["Album"] and self.metadata["Title"] != returned_value["Title"]
 
         return returned_value
 
@@ -47,7 +47,7 @@ class GrabSong(object):
                 raise
 
         for name in self.outfiles:
-            with open("%s/%s.txt" % (self.outdir, name), "w") as f:
+            with open("%s/Song%s.txt" % (self.outdir, name), "w") as f:
                 f.write(self.metadata[name])
         if not self.song_art:
             self.song_art = "%s/Images/NoArt.jpg" % self.curdir

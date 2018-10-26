@@ -28,7 +28,7 @@ status = None
 size = None
 
 def validate():
-    valid = ["title", "artist", "album"]
+    valid = ["Title", "Artist", "Album"]
     for v in valid:
         if type(v) is str:
             player.metadata[valid] = "Invalid metadata."
@@ -86,19 +86,19 @@ def set_strings(screen):
         if type(player.metadata) is not str:
             if size[0] > 0:
                 try:
-                    screen.addstr(title_y, title_x, "Title: %s" % player.metadata["title"])
+                    screen.addstr(title_y, title_x, "Title: %s" % player.metadata["Title"])
                 except curses.error:
                     pass
 
             if size[0] > 6:
                 try:
-                    screen.addstr(5, 2, "Artist: %s" % player.metadata["artist"])
+                    screen.addstr(5, 2, "Artist: %s" % player.metadata["Artist"])
                 except curses.error:
                     pass
 
             if size[0] > 8:
                 try:
-                    screen.addstr(7, 2, "Album: %s" % player.metadata["album"])
+                    screen.addstr(7, 2, "Album: %s" % player.metadata["Album"])
                 except curses.error:
                     pass
 
