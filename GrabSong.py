@@ -24,9 +24,16 @@ class GrabSong(object):
         interface = dbus.Interface(data, dbus_interface="org.freedesktop.DBus.Properties")
         metadata = interface.Get("org.mpris.MediaPlayer2.Player", "Metadata")
 
+<<<<<<< HEAD
         try:
             if art_uri.startswith("file://"):
                 art_uri = str(metadata["mpris:artUrl"])
+=======
+        art_uri = str(metadata["mpris:artUrl"])
+
+        try:
+            if art_uri.startswith("file://"):
+>>>>>>> 05c49fef9a1525d7100f39d48d09da020d47c04f
                 path = urlparse(art_uri)
                 self.song_art = unquote(os.path.abspath(os.path.join(path.netloc, path.path)))
             else:
