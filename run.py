@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from GrabSong import GrabSong
+import sys
 import curses
 import locale
 from time import time, sleep
@@ -10,7 +11,12 @@ version = "0.0.5"
 locale.setlocale(locale.LC_ALL, "")
 # End Add these to a config file
 
-player = GrabSong("pithos")
+# Number of arguments
+if len(sys.argv) != 2:
+    print("Please enter a valid media player as the first argument.")
+    sys.exit()
+
+player = GrabSong(sys.argv[1])
 
 # Time until song information is updated
 info_update_time = 0.5
