@@ -81,7 +81,7 @@ def set_strings(screen):
         except curses.error:
             pass
 
-    if size[0] > 9:
+    if size[0] > 9 and player.player_proper_name != "":
         try:
             screen.addstr(size[0]-2, 2, "Media Player: %s" % player.player_proper_name, curses.color_pair(1))
         except curses.error:
@@ -90,19 +90,19 @@ def set_strings(screen):
     if type(status) is not str:
         # validate()
         if type(player.metadata) is not str:
-            if size[0] > 0:
+            if size[0] > 0 and player.metadata["Title"] != "":
                 try:
                     screen.addstr(title_y, title_x, "Title: %s" % player.metadata["Title"])
                 except curses.error:
                     pass
 
-            if size[0] > 6:
+            if size[0] > 6 and player.metadata["Artist"] != "":
                 try:
                     screen.addstr(5, 2, "Artist: %s" % player.metadata["Artist"])
                 except curses.error:
                     pass
 
-            if size[0] > 8:
+            if size[0] > 8  and player.metadata["Album"] != "":
                 try:
                     screen.addstr(7, 2, "Album: %s" % player.metadata["Album"])
                 except curses.error:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from subprocess import Popen
 import os
+from urllib.parse import unquote, urlparse
 import dbus
 bus = dbus.SessionBus()
 
@@ -22,15 +23,35 @@ class GrabSong(object):
 
         interface = dbus.Interface(data, dbus_interface="org.freedesktop.DBus.Properties")
         metadata = interface.Get("org.mpris.MediaPlayer2.Player", "Metadata")
-        self.song_art = metadata["mpris:artUrl"]
+
+        try:
+            if art_uri.startswith("file://"):
+                art_uri = str(metadata["mpris:artUrl"])
+                path = urlparse(art_uri)
+                self.song_art = unquote(os.path.abspath(os.path.join(path.netloc, path.path)))
+            else:
+                self.song_art = None
+        except:
+            self.song_art = None
 
         self.player_proper_name = interface.Get("org.mpris.MediaPlayer2", "Identity")
 
-        returned_value = {
-            "Artist": metadata["xesam:artist"][0],
-            "Album": metadata["xesam:album"],
-            "Title": metadata["xesam:title"]
-        }
+        returned_value = {}
+
+        try:
+            returned_value["Artist"] = metadata["xesam:artist"][0]
+        except:
+            returned_value["Artist"] = ""
+
+        try:
+            returned_value["Album"] = metadata["xesam:album"]
+        except:
+            returned_value["Album"] = ""
+
+        try:
+            returned_value["Title"] = metadata["xesam:title"]
+        except:
+            returned_value["Title"] = ""
 
         if self.song_changed == False:
             self.song_changed = self.metadata["Artist"] != returned_value["Artist"] and self.metadata["Album"] != returned_value["Album"] and self.metadata["Title"] != returned_value["Title"]
