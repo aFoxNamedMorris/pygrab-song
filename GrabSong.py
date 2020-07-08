@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from subprocess import Popen
 import os
+from sys import exit
 from urllib.parse import unquote, urlparse
 import dbus
 bus = dbus.SessionBus()
@@ -18,8 +19,13 @@ class GrabSong(object):
         self.song_art = None
 
     def get_metadata(self):
-        data = bus.get_object("org.mpris.MediaPlayer2.%s" % self.player,
-                      '/org/mpris/MediaPlayer2')
+        try:
+            data = bus.get_object("org.mpris.MediaPlayer2.%s" % self.player,
+                          '/org/mpris/MediaPlayer2')
+        except dbus.exceptions.DBusException as e:
+            if e._dbus_error_name.endswith("ServiceUnknown"):
+                print("Unknown service. Please make sure there is no typo and that the media player is started.")
+                exit(1)
 
         interface = dbus.Interface(data, dbus_interface="org.freedesktop.DBus.Properties")
         metadata = interface.Get("org.mpris.MediaPlayer2.Player", "Metadata")
